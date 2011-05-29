@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:broker="http://activemq.apache.org/schema/core"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.5.0.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd
+		http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.7.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<context:component-scan base-package="fr.jahroots.xperiments.camel.spring"/>
+	
+	<!-- turn on AspejctJ AOP to weave all @Aspects beans declared in this spring xml file -->
+	<aop:aspectj-autoproxy/>
+	
+	<!-- Aspect that tracks all the invocations of the business service -->
+	<bean id="AuditTracker" class="fr.jahroots.xperiments.camel.spring.AuditTracker">
+	    <!-- define what store to use for audit backup -->
+	    <property name="store" ref="AuditStore"/>
+	</bean>
+
+	<!-- declare a camel context that scans for classes that is RouteBuilder
+     in the package org.apache.camel.example.server -->
+	<camel:camelContext id="camel-server">
+    	<camel:package>fr.jahroots.xperiments.camel.spring</camel:package>
+	    <!-- enable JMX connector so we can connect to the server and browse mbeans -->
+	    <!-- Camel will log at INFO level the service URI to use for connecting with jconsole -->
+    	<camel:jmxAgent id="agent" createConnector="true"/>
+    	<!-- the audit store endpoint is configued as file based. 
+         In Camel 2.0 the endpoint should be defined in camel context -->
+    	<camel:endpoint id="AuditStore" uri="file://target/store"/>
+	</camel:camelContext>
+	
+	<!-- lets configure the ActiveMQ JMS broker server to listen on TCP 61610 -->
+	<broker:broker useJmx="false" persistent="false" brokerName="localhost">
+	    <broker:transportConnectors>
+	        <broker:transportConnector name="tcp" uri="tcp://localhost:61610"/>
+	    </broker:transportConnectors>
+	</broker:broker>
+	
+	<!-- lets configure the Camel ActiveMQ to use the ActiveMQ broker declared above -->
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+	    <property name="brokerURL" value="tcp://localhost:61610"/>
+	</bean>
+	
+</beans>
