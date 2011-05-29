@@ -1,4 +1,4 @@
-package fr.jahroots.xperiments.activemq;
+package fr.jahroots.xperiments.activemq.simple;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Producer {
-	public static final int MAX_MSG = 1;
+	public static final int MAX_MSG = 20;
 	private Logger logger = LoggerFactory.getLogger(Producer.class.getName());
 	@SuppressWarnings("unused")
 	private ConnectionFactory factory;
@@ -31,11 +31,11 @@ public class Producer {
 	}
 
 	public void run() throws JMSException {
-//		for (int i = 0; i < MAX_MSG; i++) {
+		for (int i = 0; i < MAX_MSG; i++) {
 			logger.info("Creating Message ");
 			Message message = session.createTextMessage("Hello World!");
 			producer.send(message);
-//		}
+		}
 	}
 
 	public void close() throws JMSException {

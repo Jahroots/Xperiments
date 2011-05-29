@@ -1,4 +1,4 @@
-package fr.jahroots.xperiments.activemq;
+package fr.jahroots.xperiments.activemq.simple;
 
 import javax.jms.ConnectionFactory;
 
@@ -8,8 +8,8 @@ public class App {
 	private static final String brokerURL = "tcp://localhost:61616";
 
 	public static void main(String[] args) throws Exception {
-//		producer();
-		consumer();
+		producer();
+//		consumer();
 	}
 	
 	public static void consumer(){

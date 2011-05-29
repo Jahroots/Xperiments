@@ -1,6 +1,7 @@
-package fr.jahroots.xperiments.activemq;
+package fr.jahroots.xperiments.activemq.simple;
 
 import javax.jms.Connection;
+
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -48,7 +49,7 @@ public class Consumer implements MessageListener {
 		try {
 			if (message instanceof TextMessage) {
 				TextMessage txtMessage = (TextMessage) message;
-				logger.info("Message received: " + txtMessage.getText());
+				System.out.println("Message received: " + txtMessage.getText());
 			} else {
 				logger.info("Invalid message received.");
 			}
