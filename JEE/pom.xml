@@ -11,6 +11,17 @@
   <artifactId>JEE</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jboss.weld</groupId>
+        <artifactId>weld-core-bom</artifactId>
+        <version>2.2.4.Final</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <modules>
     <module>webapp-javaee7</module>
   </modules>
